@@ -142,7 +142,7 @@ def run_Simulation(sim_params,tier_params):
 
     return master_df
 
-params_dict = {'Arrivals':1,'SIM_TIME':60*30,'svc_lvl_thresh':30,'NUM_SIMS':10}
+params_dict = {'Arrivals':1,'SIM_TIME':60*30,'svc_lvl_thresh':30,'NUM_SIMS':2}
 sim_params = pd.DataFrame(params_dict,index=[0])
 tier_params_dict = {'Tier':[1,2,3],'Talk_mu':[397,487,396],'Wrap_mu':[62,95,79],'Hold_mu':[83,97,87],'Talk_std':[60,79,90],'Wrap_std':[20,40,47],'Hold_std':[20,34,52],'Volume':[0.7,0.97,1],'Patience':[320,480,240],'Transfer':[0.3,0.22,0.34],'CSRs':[321,94,9]}
 tier_params = pd.DataFrame(tier_params_dict)
