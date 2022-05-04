@@ -53,60 +53,60 @@ class MSCC(object):
             df['Transfer'][tier] += 1
         yield self.env.timeout(call_time)
 
-def caller(env, tier, mscc,df,svc_lvl_thresh,tier_params,num_tiers):
-    """The call process - caller arrives at the MSCC
-    and requests a CSR.
+    def caller(self, tier, mscc,df,svc_lvl_thresh,tier_params,num_tiers):
+        """The call process - caller arrives at the MSCC
+        and requests a CSR.
 
-    It then starts the call process, waits for it to finish and
-    leaves.
+        It then starts the call process, waits for it to finish and
+        leaves.
 
-    """
+        """
 
-    start = env.now
-    patience = np.random.normal(tier_params['Patience'][tier],60)
-    if patience < 1:
-        patience = 1
-    
-    # determine which CSR bucket answers call
-    choice = tier
-
-    for count in range(num_tiers-1,tier-1,-1):
-        if (len(mscc.csrs[count].queue)==0):
-            choice = count
-
+        start = self.env.now
+        patience = np.random.normal(tier_params['Patience'][tier],60)
+        if patience < 1:
+            patience = 1
         
-    with mscc.csrs[choice].request() as request:
-        results = yield request | env.timeout(patience)
-        df['Offered'][tier] += 1
-        end = env.now
+        # determine which CSR bucket answers call
+        choice = tier
 
-        if request in results:
-            df['Ans_Time'][tier] += (end-start)
-            if (end-start) <= svc_lvl_thresh:
-                df['Within_Svc_Lvl'][tier] += 1
-            yield env.process(mscc.call(tier,df,tier_params))
-        else:
-            df['Abandon'][tier] += 1
+        for count in range(num_tiers-1,tier-1,-1):
+            if (len(self.csrs[count].queue)==0):
+                choice = count
+
+            
+        with self.csrs[choice].request() as request:
+            results = yield request | self.env.timeout(patience)
+            df['Offered'][tier] += 1
+            end = self.env.now
+
+            if request in results:
+                df['Ans_Time'][tier] += (end-start)
+                if (end-start) <= svc_lvl_thresh:
+                    df['Within_Svc_Lvl'][tier] += 1
+                yield self.env.process(mscc.call(tier,df,tier_params))
+            else:
+                df['Abandon'][tier] += 1
     
-def setup(env, num_csrs,t,df,svc_lvl_thresh,tier_params,num_tiers):
-    """Create MSCC, a number of initial callers and keep creating callers
-    approx. every ``t`` seconds."""
-    mscc_sim = MSCC(env, num_csrs)
+    def setup(self, mscc,num_csrs,t,df,svc_lvl_thresh,tier_params,num_tiers):
+        """Create MSCC, a number of initial callers and keep creating callers
+        approx. every ``t`` seconds."""
+        #mscc_sim = MSCC(self.env, num_csrs)
 
-    i = 0
-    while True:
-        exp_t = random.expovariate(t)
+        i = 0
+        while True:
+            exp_t = random.expovariate(t)
 
-        yield env.timeout(exp_t)
-        i += 1
-        tier_rand = random.random()
-        
-        tier = 0
-        for count in range(num_tiers-1,-1,-1):
-            if tier_rand < tier_params['Volume'][count]:
-                tier = count
+            yield self.env.timeout(exp_t)
+            i += 1
+            tier_rand = random.random()
+            
+            tier = 0
+            for count in range(num_tiers-1,-1,-1):
+                if tier_rand < tier_params['Volume'][count]:
+                    tier = count
 
-        env.process(caller(env, tier, mscc_sim,df,svc_lvl_thresh,tier_params,num_tiers))
+            self.env.process(mscc.caller(tier, mscc,df,svc_lvl_thresh,tier_params,num_tiers))
 
 
 def run_Simulation(sim_params,tier_params):
@@ -130,7 +130,8 @@ def run_Simulation(sim_params,tier_params):
         d = {'Offered':s_val,'Handled':s_val,'Talk_Time':s_val,'Ans_Time':s_val,'Hold_Time':s_val,'Wrap_Time':s_val,'Transfer':s_val,'Abandon':s_val,'Within_Svc_Lvl':s_val,'Tier':tiers,'Iteration':iters}
         df = pd.DataFrame(data=d)
         env = simpy.Environment()
-        env.process(setup(env, Num_CSRs, T_INTER,df,svc_lvl_thresh,tier_params,num_tiers))
+        mscc_sim = MSCC(env, Num_CSRs)
+        env.process(mscc_sim.setup(mscc_sim,Num_CSRs, T_INTER,df,svc_lvl_thresh,tier_params,num_tiers))
         env.run(until=SIM_TIME)
         master_df = pd.concat([master_df,df],ignore_index=True)
         i += 1
@@ -140,13 +141,13 @@ def run_Simulation(sim_params,tier_params):
     master_df['Svc_Lvl'] = master_df['Within_Svc_Lvl']/master_df['Offered']
     master_df['ASA'] = master_df['Ans_Time']/master_df['Handled']
 
+    print(master_df.groupby(['Tier']).mean())
+
     return master_df
 
-params_dict = {'Arrivals':1,'SIM_TIME':60*30,'svc_lvl_thresh':30,'NUM_SIMS':2}
+params_dict = {'Arrivals':1,'SIM_TIME':600,'svc_lvl_thresh':30,'NUM_SIMS':1}
 sim_params = pd.DataFrame(params_dict,index=[0])
 tier_params_dict = {'Tier':[1,2,3],'Talk_mu':[397,487,396],'Wrap_mu':[62,95,79],'Hold_mu':[83,97,87],'Talk_std':[60,79,90],'Wrap_std':[20,40,47],'Hold_std':[20,34,52],'Volume':[0.7,0.97,1],'Patience':[320,480,240],'Transfer':[0.3,0.22,0.34],'CSRs':[321,94,9]}
 tier_params = pd.DataFrame(tier_params_dict)
 
 results = run_Simulation(sim_params,tier_params)
-#print(results)
-print(results.groupby(['Tier']).mean())
