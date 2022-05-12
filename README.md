@@ -1,19 +1,19 @@
 # call_center_simulation
 
 ## TO DO
-- [X] generalize labels and comments to remove MSCC language
-- [X] get rid of pandas error message
+- [ ] comment all code
+- [ ] put in jupyter notebook for users to run
 - [ ] create runs to compare multiple scenarios
 - [ ] add graphic output with histograms
-- [ ] put in jupyter notebook for users to run
-- [ ] publish as example for simpy
-- [ ] comment all code
-- [ ] put descriptions in new readme for program
+- [ ] put descriptions in new readme for running program
+- [ ] make repo public
 - [X] check program from work laptop for changes (initial calls?)
 - [X] trim variables being passed into functions
 - [X] put functions into class except for run simulation
 - [X] make print output part of run simulation function
 - [X] output takes labels from tier values
+- [X] generalize labels and comments to remove MSCC language
+- [X] get rid of pandas error message
 
 
 Call Center Simulation
