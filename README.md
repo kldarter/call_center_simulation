@@ -1,7 +1,6 @@
 # call_center_simulation
 
 ## TO DO
-- [ ] comment all code
 - [ ] put in jupyter notebook for users to run
 - [ ] create runs to compare multiple scenarios
 - [ ] add graphic output with histograms
@@ -14,6 +13,7 @@
 - [X] output takes labels from tier values
 - [X] generalize labels and comments to remove MSCC language
 - [X] get rid of pandas error message
+- [X] comment all code
 
 
 Call Center Simulation
