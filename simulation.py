@@ -24,14 +24,14 @@ class CC(object):
         if wrap_time <= 0:
             wrap_time = 0
         call_time = talk_time + hold_time + wrap_time
-        df['Talk_Time'][tier] += talk_time
-        df['Hold_Time'][tier] += hold_time
-        df['Wrap_Time'][tier] += wrap_time
-        df['Handled'][tier] += 1
+        df.loc[tier,'Talk_Time'] += talk_time
+        df.loc[tier,'Hold_Time'] += hold_time
+        df.loc[tier,'Wrap_Time'] += wrap_time
+        df.loc[tier,'Handled'] += 1
 
         transfer_prob = random.random()
         if transfer_prob < tier_params['Transfer'][tier]:
-            df['Transfer'][tier] += 1
+            df.loc[tier,'Transfer'] += 1
         yield self.env.timeout(call_time)
 
     def caller(self, tier, cc,df,svc_lvl_thresh,tier_params,num_tiers):
@@ -50,16 +50,16 @@ class CC(object):
             
         with self.agents[choice].request() as request:
             results = yield request | self.env.timeout(patience)
-            df['Offered'][tier] += 1
+            df.loc[tier,'Offered'] += 1
             end = self.env.now
 
             if request in results:
-                df['Ans_Time'][tier] += (end-start)
+                df.loc[tier,'Ans_Time'] += (end-start)
                 if (end-start) <= svc_lvl_thresh:
-                    df['Within_Svc_Lvl'][tier] += 1
+                    df.loc[tier,'Within_Svc_Lvl'] += 1
                 yield self.env.process(cc.call(tier,df,tier_params))
             else:
-                df['Abandon'][tier] += 1
+                df.loc[tier,'Abandon'] += 1
     
     def setup(self, cc,t,df,svc_lvl_thresh,tier_params,num_tiers):
         """Create CC, a number of initial callers and keep creating callers
@@ -75,7 +75,7 @@ class CC(object):
             for count in range(num_tiers-1,-1,-1):
                 if tier_rand < tier_params['Volume'][count]:
                     tier = count
-            df['Entered'][tier] += 1
+            df.loc[tier,'Entered'] += 1
 
             self.env.process(cc.caller(tier, cc,df,svc_lvl_thresh,tier_params,num_tiers))
             i += 1
@@ -91,7 +91,7 @@ class CC(object):
             for count in range(num_tiers-1,-1,-1):
                 if tier_rand < tier_params['Volume'][count]:
                     tier = count
-            df['Entered'][tier] += 1
+            df.loc[tier,'Entered'] += 1
 
             self.env.process(cc.caller(tier, cc,df,svc_lvl_thresh,tier_params,num_tiers))
 
@@ -133,6 +133,7 @@ def run_Simulation(sim_params,tier_params):
     master_df['ASA'] = master_df['Ans_Time']/master_df['Handled']
 
     print(master_df.groupby(['Tier']).mean())
+    print(master_df)
 
     return master_df
 

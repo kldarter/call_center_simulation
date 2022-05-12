@@ -2,7 +2,7 @@
 
 ## TO DO
 - [X] generalize labels and comments to remove MSCC language
-- [ ] get rid of pandas error message
+- [X] get rid of pandas error message
 - [ ] create runs to compare multiple scenarios
 - [ ] add graphic output with histograms
 - [ ] put in jupyter notebook for users to run
