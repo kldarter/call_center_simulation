@@ -3,7 +3,6 @@ import pandas as pd
 import simpy
 import numpy as np
 
-
 class CC(object):
     def __init__(self, env, num_agents):
         # initialize CC class with env and agents
