@@ -2,6 +2,8 @@
 
 ## TO DO
 - [ ] put in jupyter notebook for users to run
+- [ ] add requirements.txt file
+- [ ] create runs to compare multiple scenarios
 - [ ] add graphic output with histograms
 - [ ] create runs to compare multiple scenarios
 - [ ] put descriptions in new readme for running program
