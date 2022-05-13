@@ -163,7 +163,8 @@ def run_Simulation(sim_params,tier_params):
 
     # return master_df
     return master_df
-
+    
+"""
 # Example of setting up parameters and running simulation
 sim_dict = {'Arrivals':1,'SIM_TIME':600,'svc_lvl_thresh':30,'NUM_SIMS':1}
 sim_params = pd.DataFrame(sim_dict,index=[0])
@@ -171,3 +172,4 @@ tier_params_dict = {'Tier':['T1','T2','T3'],'Talk_mu':[397,487,396],'Wrap_mu':[6
     'Wrap_std':[20,40,47],'Hold_std':[20,34,52],'Volume':[0.7,0.97,1],'Patience':[320,480,240],'Transfer':[0.3,0.22,0.34],'Agents':[321,94,9]}
 tier_params = pd.DataFrame(tier_params_dict)
 results = run_Simulation(sim_params,tier_params)
+"""
