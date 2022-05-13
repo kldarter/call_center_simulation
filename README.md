@@ -2,8 +2,8 @@
 
 ## TO DO
 - [ ] put in jupyter notebook for users to run
-- [ ] create runs to compare multiple scenarios
 - [ ] add graphic output with histograms
+- [ ] create runs to compare multiple scenarios
 - [ ] put descriptions in new readme for running program
 - [ ] make repo public
 - [X] check program from work laptop for changes (initial calls?)
