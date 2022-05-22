@@ -4,6 +4,7 @@
 - [ ] add graphic output with histograms
 - [ ] create multiple runs to compare multiple scenarios
 - [ ] update readme
+- [ ] add keywords to repo
 - [X] make repo public
 - [X] check program from work laptop for changes (initial calls?)
 - [X] trim variables being passed into functions
