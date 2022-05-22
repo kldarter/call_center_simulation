@@ -5,6 +5,8 @@ Callers arrive at the Call Center at a random time and request an agent.
 If one agent is available, they start the call process and wait for it to finish. 
 If not, the caller waits until agent is available or their patience runs out.
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/kldarter/call_center_simulation/HEAD)
+
 Files:
 requirements.txt
 run_sim.ipynb
