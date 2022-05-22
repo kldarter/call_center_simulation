@@ -158,7 +158,6 @@ def run_Simulation(sim_params,tier_params):
 
     # print results
     print(master_df.groupby(['Tier']).mean())
-    print(master_df)
 
     # return master_df
     return master_df
