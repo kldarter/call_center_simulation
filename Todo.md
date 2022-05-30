@@ -1,7 +1,6 @@
 # TO DO
 - [ ] update run_sim file with explanations
-- [ ] add ipysheet widget for user input
-- [ ] add graphic output with histograms
+- [ ] add variable for percent agents starting with call
 - [ ] create multiple runs to compare multiple scenarios
 - [ ] update readme
 - [ ] add keywords to repo
@@ -16,3 +15,5 @@
 - [X] comment all code
 - [X] put in jupyter notebook for users to run
 - [X] add requirements.txt file
+- [X] add ipysheet widget for user input
+- [X] add graphic output with histograms

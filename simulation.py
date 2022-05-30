@@ -2,6 +2,8 @@ import random
 import pandas as pd
 import simpy
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 class CC(object):
     def __init__(self, env, num_agents):
@@ -162,13 +164,29 @@ def run_Simulation(sim_params,tier_params):
     # return master_df
     return master_df
     
-"""
-# Example of setting up parameters and running simulation:
+# Function for displaying histogram by tier
+def plotHistogram(df,col):
+    plot_df = df[[col,'Tier','Iteration']]
+    pivot_df = plot_df.pivot(index='Iteration',columns='Tier',values=col)
+    fig, ax = plt.subplots()
+    #pivot_df.plot.kde(ax=ax, legend=False, title='Histogram: A vs. B')
+    pivot_df.plot.hist(density=True, bins=20,ax=ax,title="Histogram by Tier")
+    ax.set_xlabel(col)
+    ax.grid(axis='y')
+    ax.set_facecolor('#d8dcd6')
+    plt.show()
 
-sim_dict = {'Arrivals':1,'SIM_TIME':600,'svc_lvl_thresh':30,'NUM_SIMS':1}
+
+# Example of setting up parameters and running simulation:
+"""
+sim_dict = {'Arrivals':1,'SIM_TIME':600,'svc_lvl_thresh':30,'NUM_SIMS':10}
 sim_params = pd.DataFrame(sim_dict,index=[0])
 tier_params_dict = {'Tier':['T1','T2','T3'],'Talk_mu':[397,487,396],'Wrap_mu':[62,95,79],'Hold_mu':[83,97,87],'Talk_std':[60,79,90],\
     'Wrap_std':[20,40,47],'Hold_std':[20,34,52],'Volume':[0.7,0.97,1],'Patience':[320,480,240],'Transfer':[0.3,0.22,0.34],'Agents':[321,94,9]}
 tier_params = pd.DataFrame(tier_params_dict)
 results = run_Simulation(sim_params,tier_params)
+plotHistogram(results,'ASA')
+plotHistogram(results,'Svc_Lvl')
+plotHistogram(results,'Abndn_pct')
 """
+
