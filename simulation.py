@@ -82,12 +82,12 @@ class CC(object):
             else:
                 df.loc[tier,'Abandon'] += 1
     
-    def setup(self, cc,t,df,svc_lvl_thresh,tier_params,num_tiers):
+    def setup(self, cc,t,df,svc_lvl_thresh,tier_params,num_tiers,pct_start_on_call):
         # Set up simulation
 
         # Assume that 95% of agents start time period of simulation on a call
         total_agents = tier_params['Agents'].sum()
-        initial_calls = round(total_agents*.95)
+        initial_calls = round(total_agents*pct_start_on_call)
         i = 0
         for i in range(initial_calls):
             tier_rand = random.random()
@@ -128,6 +128,7 @@ def run_Simulation(sim_params,tier_params):
     SIM_TIME = sim_params['SIM_TIME'][0]
     svc_lvl_thresh = sim_params['svc_lvl_thresh'][0]
     NUM_SIMS = sim_params['NUM_SIMS'][0]
+    pct_start_on_call = sim_params['pct_start_on_call'][0]
     i = 0
     master = {'Entered':[],'Offered':[],'Handled':[],'Talk_Time':[],'Ans_Time':[],'Hold_Time':[],'Wrap_Time':[],\
         'Transfer':[],'Abandon':[],'Within_Svc_Lvl':[],'Tier':[],'Iteration':[]}
@@ -147,7 +148,7 @@ def run_Simulation(sim_params,tier_params):
         df = pd.DataFrame(data=d)
         env = simpy.Environment()
         mscc_sim = CC(env, num_agents)
-        env.process(mscc_sim.setup(mscc_sim,T_INTER,df,svc_lvl_thresh,tier_params,num_tiers))
+        env.process(mscc_sim.setup(mscc_sim,T_INTER,df,svc_lvl_thresh,tier_params,num_tiers,pct_start_on_call))
         env.run(until=SIM_TIME)
         master_df = pd.concat([master_df,df],ignore_index=True)
         i += 1
@@ -179,7 +180,7 @@ def plotHistogram(df,col):
 
 # Example of setting up parameters and running simulation:
 """
-sim_dict = {'Arrivals':1,'SIM_TIME':600,'svc_lvl_thresh':30,'NUM_SIMS':10}
+sim_dict = {'Arrivals':1,'SIM_TIME':600,'svc_lvl_thresh':30,'NUM_SIMS':10,'pct_start_on_call':0.95}
 sim_params = pd.DataFrame(sim_dict,index=[0])
 tier_params_dict = {'Tier':['T1','T2','T3'],'Talk_mu':[397,487,396],'Wrap_mu':[62,95,79],'Hold_mu':[83,97,87],'Talk_std':[60,79,90],\
     'Wrap_std':[20,40,47],'Hold_std':[20,34,52],'Volume':[0.7,0.97,1],'Patience':[320,480,240],'Transfer':[0.3,0.22,0.34],'Agents':[321,94,9]}
@@ -189,4 +190,3 @@ plotHistogram(results,'ASA')
 plotHistogram(results,'Svc_Lvl')
 plotHistogram(results,'Abndn_pct')
 """
-
