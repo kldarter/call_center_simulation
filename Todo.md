@@ -1,5 +1,5 @@
 # TO DO
-- [ ] update run_sim file with explanations
+- [X] update run_sim file with explanations
 - [ ] create multiple runs to compare multiple scenarios
 - [ ] update readme
 - [X] add keywords to repo
