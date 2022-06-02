@@ -15,12 +15,3 @@ The run_sim.ipynb jupyter notebook defines the simulation parameters and goes th
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/kldarter/call_center_simulation/HEAD)
 
-Files:
-
-requirements.txt
-
-run_sim.ipynb
-
-simulation.py
-
-Todo.md
