@@ -1,7 +1,6 @@
 # TO DO
-- [X] update run_sim file with explanations
 - [ ] create multiple runs to compare multiple scenarios
-- [ ] update readme
+- [X] update readme
 - [X] add keywords to repo
 - [X] make repo public
 - [X] check program from work laptop for changes (initial calls?)
@@ -17,3 +16,4 @@
 - [X] add ipysheet widget for user input
 - [X] add graphic output with histograms
 - [X] add variable for percent agents starting with call
+- [X] update run_sim file with explanations
